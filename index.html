@@ -2,12 +2,27 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Zackfinance Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZackFinance Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to Zackfinance Platform</h1>
-    <p>Tunawaunganisha wajasiriamali na wawekezaji.</p>
+    <header>
+        <h1>ZackFinance Marketplace</h1>
+        <p>Tunawaunganisha Wajasiriamali na Wawekezaji</p>
+    </header>
+
+    <section id="upload-section">
+        <h2>Pakia Mradi Wako</h2>
+        <input type="file" id="projectImage" accept="image/*"><br><br>
+        <button onclick="uploadProject()">Wasilisha</button>
+    </section>
+
+    <section id="projects">
+        <h2>Miradi Iliyoletwa</h2>
+        <div id="projectList"></div>
+    </section>
+
     <script src="script.js"></script>
 </body>
 </html>

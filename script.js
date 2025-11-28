@@ -1,1 +1,0 @@
-console.log("Zackfinance platform loaded!");

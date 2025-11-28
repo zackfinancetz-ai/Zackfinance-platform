@@ -1,28 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="sw">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZackFinance Marketplace</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZackFinance Marketplace - Nyumbani</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>ZackFinance Marketplace</h1>
-        <p>Tunawaunganisha Wajasiriamali na Wawekezaji</p>
-    </header>
+  <header class="header">
+    <div class="logo">ZackFinance Marketplace</div>
+    <div style="font-size:13px;margin-top:6px">Mahali Wajasiriamali Wanakutana na Wawekezaji</div>
+  </header>
 
-    <section id="upload-section">
-        <h2>Pakia Mradi Wako</h2>
-        <input type="file" id="projectImage" accept="image/*"><br><br>
-        <button onclick="uploadProject()">Wasilisha</button>
+  <nav class="nav">
+    <a href="index.html">Nyumbani</a>
+    <a href="projects.html">Miradi</a>
+    <a href="investors.html">Wawekezaji</a>
+    <a href="contact.html">Wasiliana</a>
+  </nav>
+
+  <main class="container">
+    <section class="hero" role="region" aria-label="hero">
+      <h1>Karibu ZackFinance</h1>
+      <p>Unganisha mradi wako na wawekezaji bila stress — rahisi, wazi, na ya kuaminika.</p>
+      <div style="margin-top:14px">
+        <a class="btn" href="projects.html">Angalia Miradi</a>
+        <a class="btn" style="background:#10b981;margin-left:8px" href="contact.html">Wasiliana nasi</a>
+      </div>
     </section>
 
-    <section id="projects">
-        <h2>Miradi Iliyoletwa</h2>
-        <div id="projectList"></div>
+    <section style="margin-top:18px">
+      <h2>Miradi Yanayochipukia</h2>
+      <div class="grid" id="projects-list">
+        <article class="card">
+          <img src="assets/placeholder.svg" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:6px">
+          <h3>Shamba la Mboga za Kilimo</h3>
+          <p>Mradi wa kilimo cha mboga kwa ajili ya soko la mji. Bajeti: TZS 3,000,000</p>
+          <a class="btn" href="projects.html">Tazama</a>
+        </article>
+
+        <article class="card">
+          <img src="assets/placeholder.svg" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:6px">
+          <h3>Programu ya Simu ya Malipo</h3>
+          <p>App ndogo ya malipo kwa wajasiriamali wadogo. Bajeti: TZS 8,000,000</p>
+          <a class="btn" href="projects.html">Tazama</a>
+        </article>
+
+        <article class="card">
+          <img src="assets/placeholder.svg" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:6px">
+          <h3>Biashara ya Uchapishaji</h3>
+          <p>Biashara ya uchapishaji ya kijijini inayohitaji vifaa vipya. Bajeti: TZS 2,000,000</p>
+          <a class="btn" href="projects.html">Tazama</a>
+        </article>
+      </div>
     </section>
 
-    <script src="script.js"></script>
+    <section style="margin-top:22px">
+      <h2>Kwa Wawekezaji</h2>
+      <div class="card">
+        <p>Wawekezaji wanapata muhtasari wa miradi, maelezo ya mbinu, na njia za kuwasiliana moja kwa moja na mjasiriamali.</p>
+        <a class="btn" href="investors.html">Jisajili kama Mwekezaji</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    &copy; 2025 ZackFinance. Haki zote zimelindwa.
+  </footer>
+
 </body>
 </html>

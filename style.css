@@ -1,0 +1,71 @@
+/* style.css - Simple & Clean design */
+:root{
+  --primary:#0a4b8c;
+  --dark:#083967;
+  --muted:#6b7280;
+  --bg:#f8f8f8;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: Inter, Arial, sans-serif;
+  background:var(--bg);
+  color:#111827;
+  -webkit-font-smoothing:antialiased;
+}
+.header{
+  background:var(--primary);
+  color:white;
+  padding:20px 16px;
+  text-align:center;
+}
+.header .logo{font-weight:700;font-size:22px}
+.nav{
+  background:var(--dark);
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  padding:10px 8px;
+}
+.nav a{color:white;text-decoration:none;font-weight:600}
+.container{max-width:1000px;margin:22px auto;padding:0 16px}
+.hero{
+  background:var(--card);
+  border-radius:10px;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 6px 18px rgba(13,27,53,0.06);
+}
+.hero h1{color:var(--primary);margin:0 0 8px}
+.hero p{color:var(--muted);margin:0}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin-top:18px;
+}
+.card{
+  background:var(--card);
+  padding:16px;
+  border-radius:8px;
+  box-shadow:0 6px 18px rgba(13,27,53,0.04);
+}
+.card h3{margin:0 0 8px}
+.card p{margin:0 0 12px;color:var(--muted)}
+.btn{
+  display:inline-block;padding:10px 14px;border-radius:8px;background:var(--primary);color:white;text-decoration:none;font-weight:600;
+}
+.footer{
+  text-align:center;
+  padding:20px 8px;
+  color:var(--muted);
+  font-size:14px;
+  margin-top:28px;
+}
+
+/* responsive small tweaks */
+@media (max-width:480px){
+  .header .logo{font-size:18px}
+  .nav{gap:10px;padding:8px}
+}

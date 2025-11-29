@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html>
+<head><title>Registration</title></head>
 <body>
 <h2>Investor & Entrepreneur Registration</h2>
 <form>
-<input type='text' placeholder='Full Name'>
-<input type='email' placeholder='Email'>
-<select>
-<option>Investor</option>
-<option>Entrepreneur</option>
+<input type='text' placeholder='Full Name' required>
+<br><br>
+<input type='email' placeholder='Email' required>
+<br><br>
+<select required>
+<option value=''>Choose Account Type</option>
+<option value='Investor'>Investor</option>
+<option value='Entrepreneur'>Entrepreneur</option>
 </select>
-<input type='password' placeholder='Password'>
+<br><br>
+<input type='password' placeholder='Password' required>
+<br><br>
 <button>Register</button>
 </form>
 </body>

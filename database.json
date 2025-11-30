@@ -1,0 +1,38 @@
+{
+  "projects": [
+    {
+      "id": "p1",
+      "title": "Kilimo Mboga",
+      "owner": "Juma",
+      "budget": "TZS 3,000,000",
+      "description": "Uzito wa kilimo mdogo",
+      "email": "juma@example.com",
+      "phone": "0713-111111"
+    },
+    {
+      "id": "p2",
+      "title": "App ya Malipo",
+      "owner": "Neema",
+      "budget": "TZS 8,000,000",
+      "description": "App ya malipo kwa biashara ndogo",
+      "email": "neema@example.com",
+      "phone": "0713-222222"
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "name": "Investor A",
+      "type": "investor",
+      "email": "invA@example.com",
+      "phone": "0713-333333"
+    },
+    {
+      "id": "u2",
+      "name": "Entrepreneur B",
+      "type": "entrepreneur",
+      "email": "entB@example.com",
+      "phone": "0713-444444"
+    }
+  ]
+}

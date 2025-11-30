@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="sw"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Review</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Review Area</h1></div></header>
+<main class="container"><section class="form"><h2>Projects & Investors</h2><div id="reviewList">Loading...</div></section></main>
+<script>
+fetch('database.json').then(r=>r.json()).then(db=>{
+  const list = document.getElementById('reviewList');
+  let html = '<h3>Projects</h3>';
+  if(db.projects && db.projects.length){
+    html += '<ul>' + db.projects.map(p=>`<li><strong>${p.title}</strong> — Owner: ${p.owner} — Email: ${p.email} </li>`).join('') + '</ul>';
+  } else html += '<p>Hakuna miradi.</p>';
+  html += '<h3>Investors</h3>';
+  if(db.users && db.users.length){
+    html += '<ul>' + db.users.filter(u=>u.type==='investor').map(u=>`<li>${u.name} — Email: ${u.email ? u.email : '—'}</li>`).join('') + '</ul>';
+  } else html += '<p>Hakuna wawekezaji.</p>';
+  list.innerHTML = html;
+});
+</script></body></html>

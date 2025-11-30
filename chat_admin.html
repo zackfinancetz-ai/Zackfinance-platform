@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Admin Chat</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Admin Chat</h1></div></header>
+<main class="container"><section class="form">
+  <div id="messages" style="height:300px;overflow:auto;background:#f7fbff;padding:10px;border-radius:8px"></div>
+  <div><input id="msg" placeholder="Type message..." /><button class="btn" id="send">Send as Admin</button></div>
+</section></main>
+<script>
+if(sessionStorage.getItem('admin_logged')!=='true'){ alert('Admin only'); location.href='admin_login.html' }
+const messagesEl = document.getElementById('messages');
+const sendBtn = document.getElementById('send');
+function loadMessages(){
+  const msgs = JSON.parse(localStorage.getItem('zack_msgs')||'[]');
+  messagesEl.innerHTML = msgs.map(m=>`<div><strong>${m.user}</strong>: ${m.text}</div>`).join('');
+}
+sendBtn.addEventListener('click', ()=>{
+  const text = document.getElementById('msg').value.trim();
+  if(!text) return;
+  const msgs = JSON.parse(localStorage.getItem('zack_msgs')||'[]');
+  msgs.push({user:'Admin',text:text,time:Date.now()});
+  localStorage.setItem('zack_msgs', JSON.stringify(msgs));
+  loadMessages();
+});
+loadMessages();
+</script>

@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Chat</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Chat</h1></div></header>
+<main class="container"><section class="form">
+  <div id="messages" style="height:300px;overflow:auto;background:#f7fbff;padding:10px;border-radius:8px"></div>
+  <div><input id="msg" placeholder="Type message..." /><button class="btn" id="send">Send</button></div>
+</section></main>
+<script>
+const messagesEl = document.getElementById('messages');
+const sendBtn = document.getElementById('send');
+const input = document.getElementById('msg');
+function loadMessages(){
+  const msgs = JSON.parse(localStorage.getItem('zack_msgs')||'[]');
+  messagesEl.innerHTML = msgs.map(m=>`<div><strong>${m.user}</strong>: ${m.text}</div>`).join('');
+}
+sendBtn.addEventListener('click', ()=>{
+  const text = input.value.trim();
+  if(!text) return;
+  const user = sessionStorage.getItem('user_name') || 'Anonymous';
+  const msgs = JSON.parse(localStorage.getItem('zack_msgs')||'[]');
+  msgs.push({user:user,text:text,time:Date.now()});
+  localStorage.setItem('zack_msgs', JSON.stringify(msgs));
+  input.value='';
+  loadMessages();
+});
+loadMessages();
+</script>
+</body></html>

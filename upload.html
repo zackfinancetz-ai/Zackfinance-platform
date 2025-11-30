@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="sw"><head><meta charset="utf-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Upload Project</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Upload Project</h1></div></header>
+<main class="container"><section class="form">
+  <div id="content"></div>
+</section></main>
+<script>
+const content = document.getElementById('content');
+const userEmail = sessionStorage.getItem('user_email');
+if(!userEmail){ content.innerHTML = '<p>Unahitaji kuingia ili kupakia mradi. <a class="btn" href="login_choice.html">Login</a></p>'; }
+else {
+  content.innerHTML = `<form id="pform"><label>Title</label><input id="title" required><label>Budget</label><input id="budget" required><label>Description</label><textarea id="desc" required></textarea><button class="btn" type="submit">Upload</button></form>`;
+  document.getElementById('pform').addEventListener('submit', function(e){
+    e.preventDefault();
+    let db_local = localStorage.getItem('zack_db');
+    let db = db_local ? JSON.parse(db_local) : {projects:[],users:[]};
+    const id = 'p'+Date.now();
+    const title = document.getElementById('title').value;
+    const budget = document.getElementById('budget').value;
+    const desc = document.getElementById('desc').value;
+    const owner = sessionStorage.getItem('user_name') || 'Unknown';
+    const email = sessionStorage.getItem('user_email') || '';
+    const phone = '';
+    const project = {id:id,title:title,owner:owner,budget:budget,description:desc,email:email,phone:phone};
+    db.projects.push(project);
+    localStorage.setItem('zack_db', JSON.stringify(db));
+    alert('Project uploaded.');
+    location.href='projects.html';
+  });
+}
+</script>
+</body></html>

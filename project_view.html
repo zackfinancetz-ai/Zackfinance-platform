@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="sw"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Project</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Project Detail</h1></div></header>
+<main class="container">
+  <section class="form" id="detailArea">
+    <h2>Loading...</h2>
+    <div id="contactArea"></div>
+  </section>
+</main>
+<script>
+function getParam(name){const url=new URL(location.href);return url.searchParams.get(name)}
+const id = getParam('id');
+fetch('database.json').then(r=>r.json()).then(db=>{
+  const p = db.projects.find(x=>x.id===id);
+  const area = document.getElementById('detailArea');
+  if(!p){ area.innerHTML='<p>Mradi haupatikani.</p>'; return; }
+  area.innerHTML = `<h2>${p.title}</h2><p>${p.description}</p><p><strong>Budget:</strong> ${p.budget}</p>`;
+  const contactArea = document.getElementById('contactArea');
+  const isLogged = sessionStorage.getItem('user_email');
+  if(isLogged){
+    contactArea.innerHTML = `<p>Owner: ${p.owner} — Email: <a href="mailto:${p.email}">${p.email}</a></p><p><a class="btn" href="chat.html?user=${encodeURIComponent(p.owner)}">Chat with Owner</a></p>`;
+  } else {
+    contactArea.innerHTML = '<p>Unahitaji kuingia au kujisajili ili ku uwezo wa kuwasiliana na mmiliki.</p><p><a class="btn" href="login_choice.html">Login / Register</a></p>';
+  }
+});
+</script>
+</body></html>

@@ -1,0 +1,31 @@
+
+/* Blue theme global styles */
+:root{
+  --blue-900:#0d47a1;
+  --blue-700:#1565c0;
+  --blue-300:#90caf9;
+  --bg:#e3f2fd;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:#023047}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.site-header{background:var(--blue-900);color:white;padding:18px 0}
+.site-header h1{margin:0;font-size:22px}
+.site-header nav{margin-top:8px}
+.site-header nav a{color:white;margin-right:14px;text-decoration:none;font-weight:600}
+.hero{background:linear-gradient(180deg,var(--blue-700),var(--blue-300));color:white;padding:36px;border-radius:10px;margin-top:18px;text-align:center}
+.actions{margin-top:16px}
+.btn{background:var(--blue-900);color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700;margin-right:8px;display:inline-block}
+.btn.outline{background:transparent;border:2px solid white}
+.btn.small{padding:8px 12px;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:20px}
+.card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(13,71,161,0.08)}
+.site-footer{background:var(--blue-900);color:white;padding:14px;text-align:center;margin-top:24px}
+.form{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(13,71,161,0.06);max-width:600px;margin:18px auto}
+input,textarea,select{width:100%;padding:10px;margin-top:8px;border-radius:6px;border:1px solid #cfd8dc}
+small.help{color:#345}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+.link{color:var(--blue-900);text-decoration:underline;cursor:pointer}
+.hidden{display:none}

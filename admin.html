@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Admin Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head><body>
+<header class="site-header"><div class="container"><h1>Admin Dashboard</h1></div></header>
+<main class="container">
+  <section class="form">
+    <h2>All Projects</h2>
+    <div id="projectsTable">Loading...</div>
+    <h2>All Users (Investors & Entrepreneurs)</h2>
+    <div id="usersTable">Loading...</div>
+    <h2>Graphs</h2>
+    <canvas id="mainChart" style="max-width:800px"></canvas>
+    <h2>Chats</h2>
+    <p><a class="btn" href="chat_admin.html">Open Admin Chat</a></p>
+  </section>
+</main>
+<script>
+if(sessionStorage.getItem('admin_logged')!=='true'){ alert('Admin only. Please login.'); location.href='admin_login.html' }
+function loadDB(){
+  let db_local = localStorage.getItem('zack_db');
+  if(db_local){ db = JSON.parse(db_local); render(db); return; }
+  fetch('database.json').then(r=>r.json()).then(d=>{ db = d; render(db); });
+}
+function render(db){
+  const pt = document.getElementById('projectsTable');
+  if(!db.projects || db.projects.length===0){ pt.innerHTML='<p>Hakuna miradi.</p>'; } else {
+    const rows = db.projects.map(p=>`<tr><td>${p.id}</td><td>${p.title}</td><td>${p.owner}</td><td>${p.email || '—'}</td><td>${p.phone || '—'}</td></tr>`).join('');
+    pt.innerHTML = '<table class="table"><thead><tr><th>ID</th><th>Title</th><th>Owner</th><th>Email</th><th>Phone</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  const ut = document.getElementById('usersTable');
+  if(!db.users || db.users.length===0){ ut.innerHTML='<p>Hakuna users.</p>'; } else {
+    const rows = db.users.map(u=>`<tr><td>${u.id}</td><td>${u.name}</td><td>${u.type}</td><td>${u.email || '—'}</td><td>${u.phone || '—'}</td></tr>`).join('');
+    ut.innerHTML = '<table class="table"><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Email</th><th>Phone</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  const projectsCount = db.projects ? db.projects.length : 0;
+  const investorsCount = db.users ? db.users.filter(u=>u.type==='investor').length : 0;
+  const entreprCount = db.users ? db.users.filter(u=>u.type==='entrepreneur').length : 0;
+  new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:['Projects','Investors','Entrepreneurs'],
+      datasets:[{label:'Counts',data:[projectsCount,investorsCount,entreprCount]}]
+    }
+  });
+}
+loadDB();
+</script>
+</body></html>

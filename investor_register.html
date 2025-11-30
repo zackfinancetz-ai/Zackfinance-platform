@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="sw"><head><meta charset="utf-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Investor Register</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Jisajili Mwekezaji</h1></div></header>
+<main class="container"><section class="form">
+  <form id="regForm">
+    <label>Full name</label><input id="name" required>
+    <label>Email</label><input id="email" type="email" required>
+    <label>Phone (will be hidden on public lists)</label><input id="phone">
+    <label>Password</label><input id="password" type="password" required>
+    <button class="btn" type="submit">Register</button>
+  </form>
+  <p>Umeshalisajili? <a class="link" href="investor_login.html">Login hapa</a></p>
+</section></main>
+<script>
+document.getElementById('regForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name=document.getElementById('name').value;
+  const email=document.getElementById('email').value;
+  const phone=document.getElementById('phone').value;
+  const password=document.getElementById('password').value;
+  let db_local = localStorage.getItem('zack_db');
+  let db = db_local ? JSON.parse(db_local) : {projects:[],users:[]};
+  const id = 'u'+Date.now();
+  const user = {id:id,name:name,email:email,phone:phone,type:'investor',password:password};
+  db.users.push(user);
+  localStorage.setItem('zack_db', JSON.stringify(db));
+  alert('Registration successful. Please login.');
+  location.href='investor_login.html';
+});
+</script>
+</body></html>

@@ -1,64 +1,34 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Miradi - ZackFinance</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Miradi - ZackFinance</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="header">
-    <div class="logo">ZackFinance Marketplace</div>
-  </header>
-  <nav class="nav">
-    <a href="index.html">Nyumbani</a>
-    <a href="projects.html">Miradi</a>
-    <a href="investors.html">Wawekezaji</a>
-    <a href="contact.html">Wasiliana</a>
-  </nav>
-
-  <main class="container">
-    <h1>Orodha ya Miradi</h1>
-    <div class="grid">
-      <div class="card">
-        <img src="assets/placeholder.svg" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:6px">
-        <h3>Shamba la Mboga</h3>
-        <p>Bajeti: TZS 3,000,000 · Muda: 6 miezi</p>
-        <p>Maelezo: Kilimo cha mboga kwa masoko ya ndani. Inahitaji mbegu na maji ya borehole.</p>
-      </div>
-      <div class="card">
-        <img src="assets/placeholder.svg" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:6px">
-        <h3>App ya Malipo</h3>
-        <p>Bajeti: TZS 8,000,000 · Muda: 9 miezi</p>
-        <p>Maelezo: App ndogo ya malipo kwa wauzaji wadogo, inahitaji development na marketing.</p>
-      </div>
-      <div class="card">
-        <img src="assets/placeholder.svg" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:6px">
-        <h3>Uchapishaji wa Kijijini</h3>
-        <p>Bajeti: TZS 2,000,000 · Muda: 3 miezi</p>
-        <p>Maelezo: Kupanua huduma za uchapishaji, kununua printer na vifaa.</p>
-      </div>
-    </div>
-
-    <div style="margin-top:18px" class="card">
-      <h2>Pakia Mradi Wako</h2>
-      <p>Tumia form hapa chini kupakia maelezo ya mradi (hii ni template statiki — unaweza kuunganisha backend baadaye).</p>
-      <form id="uploadForm">
-        <div style="margin-bottom:8px">
-          <label>Jina la Mradi<br><input type="text" name="title" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e5e7eb"></label>
-        </div>
-        <div style="margin-bottom:8px">
-          <label>Maelezo<br><textarea name="desc" rows="4" style="width:100%;padding:8px;border-radius:6px;border:1px solid #e5e7eb"></textarea></label>
-        </div>
-        <div style="display:flex;gap:8px">
-          <input class="btn" type="submit" value="Submit">
-          <button type="reset" class="btn" style="background:#ef4444">Clear</button>
-        </div>
-      </form>
-    </div>
-  </main>
-
-  <footer class="footer">&copy; 2025 ZackFinance</footer>
-  <script src="app.js"></script>
+<header class="site-header"><div class="container"><h1>Miradi</h1><nav><a href="index.html">Home</a> | <a href="register_choice.html">Register</a></nav></div></header>
+<main class="container">
+  <section class="form">
+    <h2>Available Projects</h2>
+    <div id="projectsList">Loading projects...</div>
+    <p><a class="btn" href="upload.html">Upload Project (requires login)</a></p>
+  </section>
+</main>
+<script>
+function loadDB(){
+  let db_local = localStorage.getItem('zack_db');
+  if(db_local){ db = JSON.parse(db_local); render(db); return; }
+  fetch('database.json').then(r=>r.json()).then(db=>render(db));
+}
+function render(db){
+  const list = document.getElementById('projectsList');
+  if(!db.projects || db.projects.length===0){ list.innerHTML='Hakuna mradi.'; return; }
+  list.innerHTML = '<table class="table"><thead><tr><th>Project</th><th>Owner</th><th>Budget</th><th>Action</th></tr></thead><tbody>' +
+    db.projects.map(p=>`<tr><td>${p.title}</td><td>${p.owner}</td><td>${p.budget}</td><td><a class="btn small" href="project_view.html?id=${encodeURIComponent(p.id)}">View</a></td></tr>`).join('') +
+    '</tbody></table>';
+}
+loadDB();
+</script>
 </body>
 </html>

@@ -1,49 +1,50 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ZackFinance — Marketplace</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>:root{--blue:#0b6ef6;--blue-dark:#0753c8}.brand{background:linear-gradient(90deg,var(--blue),var(--blue-dark));color:white}.card{border-radius:12px;box-shadow:0 8px 20px rgba(11,110,246,0.08);}</style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZackFinance — Marketplace</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
-<header class="brand p-4">
+<header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
   <div class="container mx-auto flex items-center justify-between">
-    <h1 class="text-2xl font-semibold">ZackFinance</h1>
-    <nav class="space-x-4">
-      <a href="index.html" class="text-white">Home</a>
-      <a href="projects.html" class="text-white">Projects</a>
-      <a href="about.html" class="text-white">About</a>
-      <a href="contact.html" class="text-white">Contact</a>
-      <a href="register.html" class="text-white">Register</a>
-      <a href="login.html" class="text-white">Sign in</a>
+    <div class="flex items-center gap-3">
+      <div class="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">Z</div>
+      <h1 class="text-xl font-semibold">ZackFinance</h1>
+    </div>
+    <nav class="space-x-4 text-sm">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="projects.html" class="hover:underline">Projects</a>
+      <a href="upload.html" class="hover:underline">Upload</a>
+      <a href="dashboard.html" class="hover:underline">Dashboard</a>
+      <a href="about.html" class="hover:underline">About</a>
+      <a href="contact.html" class="hover:underline">Contact</a>
     </nav>
   </div>
 </header>
 
 <main class="container mx-auto p-6">
-  <section class="grid md:grid-cols-2 gap-6 items-center">
+  <div class="grid md:grid-cols-2 gap-6 items-center">
     <div>
       <h2 class="text-3xl font-bold mb-4">Showcase your startup. Find investors.</h2>
-      <p class="mb-4 text-gray-700">ZackFinance connects entrepreneurs with investors. Upload your project, get discovered, and track interest with real-time dashboards.</p>
+      <p class="mb-4 text-gray-700">Upload your project to be discovered by investors on ZackFinance.</p>
       <div class="flex gap-3">
-        <a href="register.html" class="brand px-4 py-2 rounded text-white">Get Started</a>
+        <a href="register.html" class="bg-blue-600 px-4 py-2 rounded text-white">Get Started</a>
         <a href="projects.html" class="px-4 py-2 rounded border">Browse Projects</a>
       </div>
     </div>
-    <div class="card p-6 bg-white">
+    <div class="bg-white rounded-lg p-6 shadow">
       <h3 class="font-semibold mb-2">Latest projects</h3>
       <div id="latest-projects" class="space-y-3"></div>
     </div>
-  </section>
+  </div>
 </main>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
   import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js";
 
   const firebaseConfig = {
@@ -61,7 +62,7 @@
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  window.zf = { auth, db, storage, Chart, serverTimestamp };
+  window.zf = { auth, db, storage, Chart, serverTimestamp, doc, deleteDoc, deleteObject };
 </script>
 
 <script>
@@ -75,7 +76,7 @@
       const p = d.data();
       const el = document.createElement('div');
       el.className = 'p-3 border rounded';
-      el.innerHTML = '<strong>'+ (p.title||'Untitled') +'</strong><div class="text-sm text-gray-600">'+ ((p.desc||'').slice(0,120)) +'</div>';
+      el.innerHTML = `<strong>${p.title||'Untitled'}</strong><div class="text-sm text-gray-600">${(p.desc||'').slice(0,120)}</div>`;
       list.appendChild(el);
     });
   });

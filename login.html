@@ -1,35 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Login — ZackFinance</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-gray-50"><header class="brand p-4">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-gray-50"><header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
   <div class="container mx-auto flex items-center justify-between">
-    <h1 class="text-2xl font-semibold">ZackFinance</h1>
-    <nav class="space-x-4">
-      <a href="index.html" class="text-white">Home</a>
-      <a href="projects.html" class="text-white">Projects</a>
-      <a href="about.html" class="text-white">About</a>
-      <a href="contact.html" class="text-white">Contact</a>
-      <a href="register.html" class="text-white">Register</a>
-      <a href="login.html" class="text-white">Sign in</a>
+    <div class="flex items-center gap-3">
+      <div class="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">Z</div>
+      <h1 class="text-xl font-semibold">ZackFinance</h1>
+    </div>
+    <nav class="space-x-4 text-sm">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="projects.html" class="hover:underline">Projects</a>
+      <a href="upload.html" class="hover:underline">Upload</a>
+      <a href="dashboard.html" class="hover:underline">Dashboard</a>
+      <a href="about.html" class="hover:underline">About</a>
+      <a href="contact.html" class="hover:underline">Contact</a>
     </nav>
   </div>
 </header>
 
 <main class="container mx-auto p-6">
-  <div class="max-w-md mx-auto card p-6 bg-white">
+  <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
     <h2 class="text-xl font-semibold mb-4">Sign in</h2>
     <form id="loginForm" class="space-y-3">
-      <input id="email" type="email" required placeholder="Email" class="w-full p-2 border rounded" />
-      <input id="password" type="password" required placeholder="Password" class="w-full p-2 border rounded" />
-      <button class="brand px-4 py-2 rounded text-white" type="submit">Sign in</button>
+      <input id="email" type="email" placeholder="Email" class="w-full p-2 border rounded" required>
+      <input id="password" type="password" placeholder="Password" class="w-full p-2 border rounded" required>
+      <button class="bg-blue-600 px-4 py-2 rounded text-white" type="submit">Sign in</button>
       <p id="msg" class="text-sm text-red-600"></p>
     </form>
-    <p class="text-sm mt-3">Don't have an account? <a href="register.html" class="text-blue-600">Register</a></p>
   </div>
 </main>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
   import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js";
 
   const firebaseConfig = {
@@ -47,7 +49,7 @@
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  window.zf = { auth, db, storage, Chart, serverTimestamp };
+  window.zf = { auth, db, storage, Chart, serverTimestamp, doc, deleteDoc, deleteObject };
 </script>
 
 <script>
@@ -57,7 +59,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   e.preventDefault();
   try{
     await signInWithEmailAndPassword(auth, $('email').value.trim(), $('password').value);
-    window.location.href = 'dashboard.html';
+    window.location.href='dashboard.html';
   }catch(err){
     $('msg').textContent = err.message;
   }

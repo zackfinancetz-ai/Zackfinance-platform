@@ -1,13 +1,16 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Projects — ZackFinance</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-gray-50"><header class="brand p-4">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Projects</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-gray-50"><header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
   <div class="container mx-auto flex items-center justify-between">
-    <h1 class="text-2xl font-semibold">ZackFinance</h1>
-    <nav class="space-x-4">
-      <a href="index.html" class="text-white">Home</a>
-      <a href="projects.html" class="text-white">Projects</a>
-      <a href="about.html" class="text-white">About</a>
-      <a href="contact.html" class="text-white">Contact</a>
-      <a href="register.html" class="text-white">Register</a>
-      <a href="login.html" class="text-white">Sign in</a>
+    <div class="flex items-center gap-3">
+      <div class="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">Z</div>
+      <h1 class="text-xl font-semibold">ZackFinance</h1>
+    </div>
+    <nav class="space-x-4 text-sm">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="projects.html" class="hover:underline">Projects</a>
+      <a href="upload.html" class="hover:underline">Upload</a>
+      <a href="dashboard.html" class="hover:underline">Dashboard</a>
+      <a href="about.html" class="hover:underline">About</a>
+      <a href="contact.html" class="hover:underline">Contact</a>
     </nav>
   </div>
 </header>
@@ -19,8 +22,8 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
   import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js";
 
   const firebaseConfig = {
@@ -38,7 +41,7 @@
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  window.zf = { auth, db, storage, Chart, serverTimestamp };
+  window.zf = { auth, db, storage, Chart, serverTimestamp, doc, deleteDoc, deleteObject };
 </script>
 
 <script>
@@ -50,9 +53,9 @@ onSnapshot(q, snap => {
   snap.forEach(d => {
     const p = d.data();
     const el = document.createElement('div');
-    el.className='card p-4 bg-white';
+    el.className='bg-white p-4 rounded shadow';
     let html = '<h4 class="font-semibold">'+ (p.title||'Untitled') +'</h4><p class="text-sm text-gray-600">'+ (p.desc||'') +'</p>';
-    if(p.fileUrl){ html += '<img src="'+ p.fileUrl +'" class="mt-2 rounded max-h-40 object-cover">'; }
+    if(p.fileUrl) html += '<img src="'+ p.fileUrl +'" class="mt-2 rounded max-h-40 object-cover">';
     html += '<div class="text-xs mt-2 text-gray-500">'+ (p.ownerEmail||'') +'</div>';
     el.innerHTML = html;
     grid.appendChild(el);

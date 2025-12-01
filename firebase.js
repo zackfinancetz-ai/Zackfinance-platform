@@ -1,0 +1,1 @@
+export const firebaseConfig={apiKey:'YOUR_API_KEY'};

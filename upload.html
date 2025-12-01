@@ -1,31 +1,9 @@
-<!DOCTYPE html><html lang="sw"><head><meta charset="utf-8"/><meta name="viewport"content="width=device-width,initial-scale=1"/><title>Upload Project</title><link rel="stylesheet" href="styles.css"></head><body>
-<header class="site-header"><div class="container"><h1>Upload Project</h1></div></header>
-<main class="container"><section class="form">
-  <div id="content"></div>
-</section></main>
-<script>
-const content = document.getElementById('content');
-const userEmail = sessionStorage.getItem('user_email');
-if(!userEmail){ content.innerHTML = '<p>Unahitaji kuingia ili kupakia mradi. <a class="btn" href="login_choice.html">Login</a></p>'; }
-else {
-  content.innerHTML = `<form id="pform"><label>Title</label><input id="title" required><label>Budget</label><input id="budget" required><label>Description</label><textarea id="desc" required></textarea><button class="btn" type="submit">Upload</button></form>`;
-  document.getElementById('pform').addEventListener('submit', function(e){
-    e.preventDefault();
-    let db_local = localStorage.getItem('zack_db');
-    let db = db_local ? JSON.parse(db_local) : {projects:[],users:[]};
-    const id = 'p'+Date.now();
-    const title = document.getElementById('title').value;
-    const budget = document.getElementById('budget').value;
-    const desc = document.getElementById('desc').value;
-    const owner = sessionStorage.getItem('user_name') || 'Unknown';
-    const email = sessionStorage.getItem('user_email') || '';
-    const phone = '';
-    const project = {id:id,title:title,owner:owner,budget:budget,description:desc,email:email,phone:phone};
-    db.projects.push(project);
-    localStorage.setItem('zack_db', JSON.stringify(db));
-    alert('Project uploaded.');
-    location.href='projects.html';
-  });
-}
-</script>
-</body></html>
+<!doctype html><html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Upload Project</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Upload Project</h1></div></header><main class="container"><section class="form" id="area"></section></main>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="firebase/firebaseConfig.js"></script>
+<script>initFirebase();const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage();
+auth.onAuthStateChanged(async user=>{ if(!user){ document.getElementById('area').innerHTML='<p>Ingia kwanza: <a class="btn" href="login.html">Login</a></p>'; return;} const doc=await db.collection('users').doc(user.uid).get(); if(!doc.exists){ document.getElementById('area').innerHTML='<p>Profile not found.</p>'; return;} const profile=doc.data(); if(profile.type!=='entrepreneur'){ document.getElementById('area').innerHTML='<p>Only entrepreneurs can upload projects.</p>'; return;} document.getElementById('area').innerHTML = `<form id='pform'><label>Title</label><input id='title' required><label>Budget</label><input id='budget' required><label>Description</label><textarea id='desc' required></textarea><label>Project Image</label><input type='file' id='projectImage' accept='image/*' /><button class='btn' type='submit'>Upload</button></form>`; document.getElementById('pform').addEventListener('submit', async function(e){ e.preventDefault(); const title=document.getElementById('title').value; const budget=document.getElementById('budget').value; const desc=document.getElementById('desc').value; const file = document.getElementById('projectImage').files[0]; let imageUrl = ''; if(file){ const path = `project_images/${user.uid}/${Date.now()}_${file.name}`; const ref = storage.ref(path); await ref.put(file); imageUrl = await ref.getDownloadURL(); } await db.collection('projects').add({title:title,budget:budget,description:desc,ownerUid:user.uid,ownerName:profile.name,ownerEmail:profile.email,ownerMobile:profile.mobile,imageUrl:imageUrl,created:Date.now()}); alert('Project uploaded'); window.location='projects.html'; }); });</script></body></html>

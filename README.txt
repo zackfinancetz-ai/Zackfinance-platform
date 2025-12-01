@@ -1,0 +1,1 @@
+This package (v2) includes image upload using Firebase Storage. Follow the README inside the previous zip for setup steps. Make sure to enable Storage in Firebase console.

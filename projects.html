@@ -1,34 +1,6 @@
-<!DOCTYPE html>
-<html lang="sw">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Miradi - ZackFinance</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<header class="site-header"><div class="container"><h1>Miradi</h1><nav><a href="index.html">Home</a> | <a href="register_choice.html">Register</a></nav></div></header>
-<main class="container">
-  <section class="form">
-    <h2>Available Projects</h2>
-    <div id="projectsList">Loading projects...</div>
-    <p><a class="btn" href="upload.html">Upload Project (requires login)</a></p>
-  </section>
-</main>
-<script>
-function loadDB(){
-  let db_local = localStorage.getItem('zack_db');
-  if(db_local){ db = JSON.parse(db_local); render(db); return; }
-  fetch('database.json').then(r=>r.json()).then(db=>render(db));
-}
-function render(db){
-  const list = document.getElementById('projectsList');
-  if(!db.projects || db.projects.length===0){ list.innerHTML='Hakuna mradi.'; return; }
-  list.innerHTML = '<table class="table"><thead><tr><th>Project</th><th>Owner</th><th>Budget</th><th>Action</th></tr></thead><tbody>' +
-    db.projects.map(p=>`<tr><td>${p.title}</td><td>${p.owner}</td><td>${p.budget}</td><td><a class="btn small" href="project_view.html?id=${encodeURIComponent(p.id)}">View</a></td></tr>`).join('') +
-    '</tbody></table>';
-}
-loadDB();
-</script>
-</body>
-</html>
+<!doctype html><html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Miradi</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Miradi</h1></div></header><main class="container"><section class="form"><h2>Available Projects</h2><div id="list">Loading...</div></section></main>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="firebase/firebaseConfig.js"></script>
+<script>initFirebase();const db=firebase.firestore();db.collection('projects').orderBy('created','desc').get().then(snap=>{const out=[];snap.forEach(d=>{const p=d.data();out.push('<div class="card"><h3>'+p.title+'</h3>'+ (p.imageUrl?('<img src="'+p.imageUrl+'" class="project-img"/>'):'') +'<p>'+p.description+'</p><p><strong>Owner:</strong> '+p.ownerName+'</p><p><strong>Budget:</strong> '+p.budget+'</p><p><a class="btn" href="project_view.html?id='+d.id+'">View</a></p></div>');});document.getElementById('list').innerHTML=out.join('')});</script></body></html>

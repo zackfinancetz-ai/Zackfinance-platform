@@ -1,27 +1,7 @@
-<!DOCTYPE html>
-<html lang="sw"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Project</title><link rel="stylesheet" href="styles.css"></head><body>
-<header class="site-header"><div class="container"><h1>Project Detail</h1></div></header>
-<main class="container">
-  <section class="form" id="detailArea">
-    <h2>Loading...</h2>
-    <div id="contactArea"></div>
-  </section>
-</main>
-<script>
-function getParam(name){const url=new URL(location.href);return url.searchParams.get(name)}
-const id = getParam('id');
-fetch('database.json').then(r=>r.json()).then(db=>{
-  const p = db.projects.find(x=>x.id===id);
-  const area = document.getElementById('detailArea');
-  if(!p){ area.innerHTML='<p>Mradi haupatikani.</p>'; return; }
-  area.innerHTML = `<h2>${p.title}</h2><p>${p.description}</p><p><strong>Budget:</strong> ${p.budget}</p>`;
-  const contactArea = document.getElementById('contactArea');
-  const isLogged = sessionStorage.getItem('user_email');
-  if(isLogged){
-    contactArea.innerHTML = `<p>Owner: ${p.owner} — Email: <a href="mailto:${p.email}">${p.email}</a></p><p><a class="btn" href="chat.html?user=${encodeURIComponent(p.owner)}">Chat with Owner</a></p>`;
-  } else {
-    contactArea.innerHTML = '<p>Unahitaji kuingia au kujisajili ili ku uwezo wa kuwasiliana na mmiliki.</p><p><a class="btn" href="login_choice.html">Login / Register</a></p>';
-  }
-});
-</script>
-</body></html>
+<!doctype html><html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><div class="container"><h1>Project Detail</h1></div></header><main class="container"><section class="form" id="detail"></section></main>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="firebase/firebaseConfig.js"></script>
+<script>initFirebase();const db=firebase.firestore(),auth=firebase.auth();function getParam(){const u=new URL(location.href);return u.searchParams.get('id');}const id=getParam();db.collection('projects').doc(id).get().then(d=>{if(!d.exists){document.getElementById('detail').innerHTML='<p>Mradi haupatikani</p>';return;}const p=d.data();let html='<h2>'+p.title+'</h2>' + (p.imageUrl?('<img src="'+p.imageUrl+'" class="project-img"/>'):'') + '<p>'+p.description+'</p><p><strong>Budget:</strong> '+p.budget+'</p><p><strong>Owner:</strong> '+p.ownerName+'</p><p><strong>Contact email:</strong> <a href="mailto:'+p.ownerEmail+'">'+p.ownerEmail+'</a></p>';auth.onAuthStateChanged(user=>{if(user){html+='<p><strong>Mobile:</strong> '+p.ownerMobile+'</p>'}else{html+='<p>Ingia ili kuona namba ya simu.</p><p><a class="btn" href="login.html">Login</a></p>'}document.getElementById('detail').innerHTML=html;});});</script></body></html>

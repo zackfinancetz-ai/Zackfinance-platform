@@ -1,86 +1,53 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ZackFinance — Marketplace</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-gray-50 text-gray-800">
-<header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
-  <div class="container mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">Z</div>
-      <h1 class="text-xl font-semibold">ZackFinance</h1>
-    </div>
-    <nav class="space-x-4 text-sm">
-      <a href="index.html" class="hover:underline">Home</a>
-      <a href="projects.html" class="hover:underline">Projects</a>
-      <a href="upload.html" class="hover:underline">Upload</a>
-      <a href="dashboard.html" class="hover:underline">Dashboard</a>
-      <a href="about.html" class="hover:underline">About</a>
-      <a href="contact.html" class="hover:underline">Contact</a>
-    </nav>
-  </div>
-</header>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZackFinance</title>
+<link rel="stylesheet" href="style.css"></head>
+<body>
 
-<main class="container mx-auto p-6">
-  <div class="grid md:grid-cols-2 gap-6 items-center">
-    <div>
-      <h2 class="text-3xl font-bold mb-4">Showcase your startup. Find investors.</h2>
-      <p class="mb-4 text-gray-700">Upload your project to be discovered by investors on ZackFinance.</p>
-      <div class="flex gap-3">
-        <a href="register.html" class="bg-blue-600 px-4 py-2 rounded text-white">Get Started</a>
-        <a href="projects.html" class="px-4 py-2 rounded border">Browse Projects</a>
-      </div>
+<div class="header">
+  <div class="brand">ZackFinance</div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <a href="upload.html">Upload</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+  </div>
+</div>
+
+<main class="container">
+  <div class="card">
+    <h1>Welcome to ZackFinance Marketplace</h1>
+    <p class="small">Connect entrepreneurs with investors. Located: Bunju B, Dar es Salaam.</p>
+    <div style="margin-top:12px">
+      <a class="btn" href="upload.html">Upload Project</a>
+      <a style="margin-left:8px" href="projects.html">Browse Projects</a>
     </div>
-    <div class="bg-white rounded-lg p-6 shadow">
-      <h3 class="font-semibold mb-2">Latest projects</h3>
-      <div id="latest-projects" class="space-y-3"></div>
-    </div>
+  </div>
+
+  <div style="margin-top:16px" class="card">
+    <h3>Latest Projects</h3>
+    <div id="latest" class="grid" style="margin-top:12px"></div>
   </div>
 </main>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-  import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7GJAwoB_mXTHeXpSP5n3OrUCe8v_3YlI",
-    authDomain: "zackfinance-hub.firebaseapp.com",
-    projectId: "zackfinance-hub",
-    storageBucket: "zackfinance-hub.firebasestorage.app",
-    messagingSenderId: "855025662852",
-    appId: "1:855025662852:web:a1951b145ba167eeecbbd1",
-    measurementId: "G-EXGXL15PYV"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
-
-  window.zf = { auth, db, storage, Chart, serverTimestamp, doc, deleteDoc, deleteObject };
-</script>
-
+<footer class="footer">ZackFinance — Connect. Fund. Grow. &nbsp; <span class="small">Contact: 0767-76767 • zackfinancetz@gmail.com</span></footer>
+<script src="common.js"></script>
 <script>
-(async function(){
-  const { db } = window.zf;
-  const q = query(collection(db,'projects'), orderBy('createdAt','desc'));
-  onSnapshot(q, snap => {
-    const list = document.getElementById('latest-projects');
-    list.innerHTML = '';
-    snap.forEach(d => {
-      const p = d.data();
-      const el = document.createElement('div');
-      el.className = 'p-3 border rounded';
-      el.innerHTML = `<strong>${p.title||'Untitled'}</strong><div class="text-sm text-gray-600">${(p.desc||'').slice(0,120)}</div>`;
-      list.appendChild(el);
-    });
+// load latest projects from localStorage
+(function(){
+  const projects = readFromLS('projects') || [];
+  const el = document.getElementById('latest');
+  if(projects.length===0){ el.innerHTML='<div class="small">No projects yet.</div>'; return; }
+  const latest = projects.slice().reverse().slice(0,6);
+  latest.forEach(function(p){
+    const d = document.createElement('div');
+    d.className='card';
+    d.innerHTML = '<strong>'+ (p.title||'Untitled') +'</strong><div class="small">'+ (p.desc||'').slice(0,120) +'</div>' + (p.image?'<img src="'+p.image+'" class="project-img">':'');
+    el.appendChild(d);
   });
 })();
 </script>
-</body>
-</html>
+</body></html>

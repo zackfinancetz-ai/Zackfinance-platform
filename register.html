@@ -1,79 +1,46 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Register</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-gray-50"><header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
-  <div class="container mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">Z</div>
-      <h1 class="text-xl font-semibold">ZackFinance</h1>
-    </div>
-    <nav class="space-x-4 text-sm">
-      <a href="index.html" class="hover:underline">Home</a>
-      <a href="projects.html" class="hover:underline">Projects</a>
-      <a href="upload.html" class="hover:underline">Upload</a>
-      <a href="dashboard.html" class="hover:underline">Dashboard</a>
-      <a href="about.html" class="hover:underline">About</a>
-      <a href="contact.html" class="hover:underline">Contact</a>
-    </nav>
-  </div>
-</header>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Register - ZackFinance</title>
+<link rel="stylesheet" href="style.css"></head><body>
 
-<main class="container mx-auto p-6">
-  <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-semibold mb-4">Create an account</h2>
-    <form id="regForm" class="space-y-3">
-      <input id="fullname" placeholder="Full name" class="w-full p-2 border rounded" required>
-      <input id="email" type="email" placeholder="Email" class="w-full p-2 border rounded" required>
-      <input id="mobile" placeholder="Mobile" class="w-full p-2 border rounded">
-      <select id="role" class="w-full p-2 border rounded"><option value="entrepreneur">Entrepreneur</option><option value="investor">Investor</option></select>
-      <input id="password" type="password" placeholder="Password" class="w-full p-2 border rounded" required>
-      <button class="bg-blue-600 px-4 py-2 rounded text-white" type="submit">Register</button>
-      <p id="msg" class="text-sm text-red-600"></p>
+<div class="header">
+  <div class="brand">ZackFinance</div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <a href="upload.html">Upload</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+  </div>
+</div>
+
+<main class="container">
+  <div class="card"><h2>Register</h2>
+    <form id="regForm" class="form">
+      <label>Full name</label><input id="name" required>
+      <label>Email</label><input id="email" type="email" required>
+      <label>Password</label><input id="password" type="password" required>
+      <div style="margin-top:10px"><button class="btn" type="submit">Register</button></div>
+      <p id="msg" class="small"></p>
     </form>
   </div>
 </main>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-  import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7GJAwoB_mXTHeXpSP5n3OrUCe8v_3YlI",
-    authDomain: "zackfinance-hub.firebaseapp.com",
-    projectId: "zackfinance-hub",
-    storageBucket: "zackfinance-hub.firebasestorage.app",
-    messagingSenderId: "855025662852",
-    appId: "1:855025662852:web:a1951b145ba167eeecbbd1",
-    measurementId: "G-EXGXL15PYV"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
-
-  window.zf = { auth, db, storage, Chart, serverTimestamp, doc, deleteDoc, deleteObject };
-</script>
-
+<footer class="footer">ZackFinance</footer>
+<script src="common.js"></script>
 <script>
-const { auth, db, serverTimestamp } = window.zf;
-const $ = id => document.getElementById(id);
-document.getElementById('regForm').addEventListener('submit', async function(e){
+document.getElementById('regForm').addEventListener('submit', function(e){
   e.preventDefault();
-  try{
-    const name = $('fullname').value.trim();
-    const email = $('email').value.trim();
-    const mobile = $('mobile').value.trim();
-    const role = $('role').value;
-    const password = $('password').value;
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    await addDoc(collection(db,'users'), { uid: cred.user.uid, name, email, mobile, role, createdAt: serverTimestamp() });
-    await updateProfile(cred.user, { displayName: name });
-    $('msg').textContent = 'Registered! Please sign in.';
-    e.target.reset();
-  }catch(err){
-    $('msg').textContent = err.message;
-  }
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value;
+  const users = readFromLS('users') || [];
+  if(users.find(function(u){ return u.email===email; })){ document.getElementById('msg').textContent='Email already registered'; return; }
+  const newUser = { id: Date.now(), name: name, email: email, password: pass };
+  users.push(newUser);
+  saveToLS('users', users);
+  document.getElementById('msg').textContent='Registered. Please login.';
+  setTimeout(function(){ location.href='login.html'; },1200);
 });
 </script>
 </body></html>

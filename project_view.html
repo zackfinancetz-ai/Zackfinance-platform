@@ -1,7 +1,66 @@
-<!doctype html><html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project</title><link rel="stylesheet" href="styles.css"></head><body>
-<header class="site-header"><div class="container"><h1>Project Detail</h1></div></header><main class="container"><section class="form" id="detail"></section></main>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="firebase/firebaseConfig.js"></script>
-<script>initFirebase();const db=firebase.firestore(),auth=firebase.auth();function getParam(){const u=new URL(location.href);return u.searchParams.get('id');}const id=getParam();db.collection('projects').doc(id).get().then(d=>{if(!d.exists){document.getElementById('detail').innerHTML='<p>Mradi haupatikani</p>';return;}const p=d.data();let html='<h2>'+p.title+'</h2>' + (p.imageUrl?('<img src="'+p.imageUrl+'" class="project-img"/>'):'') + '<p>'+p.description+'</p><p><strong>Budget:</strong> '+p.budget+'</p><p><strong>Owner:</strong> '+p.ownerName+'</p><p><strong>Contact email:</strong> <a href="mailto:'+p.ownerEmail+'">'+p.ownerEmail+'</a></p>';auth.onAuthStateChanged(user=>{if(user){html+='<p><strong>Mobile:</strong> '+p.ownerMobile+'</p>'}else{html+='<p>Ingia ili kuona namba ya simu.</p><p><a class="btn" href="login.html">Login</a></p>'}document.getElementById('detail').innerHTML=html;});});</script></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project - ZackFinance</title>
+<link rel="stylesheet" href="style.css"></head><body>
+
+<div class="header">
+  <div class="brand">ZackFinance</div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <a href="upload.html">Upload</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+  </div>
+</div>
+
+<main class="container">
+  <div id="projectCard" class="card">Loading...</div>
+  <div class="card" style="margin-top:12px">
+    <h3>Reviews</h3>
+    <div id="reviewsList" class="space" style="margin-top:8px"></div>
+    <div style="margin-top:12px"><textarea id="reviewText" rows="3" placeholder="Write a review"></textarea><div style="margin-top:8px"><button class="btn" id="submitReview">Submit Review</button></div><p id="rmsg" class="small"></p></div>
+  </div>
+</main>
+<footer class="footer">ZackFinance</footer>
+<script src="common.js"></script>
+<script>
+(function(){
+  const id = localStorage.getItem('viewProjectId');
+  const projects = readFromLS('projects') || [];
+  const p = projects.find(function(x){ return String(x.id)===String(id); });
+  const pc = document.getElementById('projectCard');
+  if(!p){ pc.innerHTML='Project not found'; return; }
+  pc.innerHTML = '<h2>'+p.title+'</h2>' + (p.image?'<img src="'+p.image+'" class="project-img">':'') + '<p class="small">'+(p.desc||'')+'</p><p class="small">Budget: '+(p.budget||'Not specified')+'</p><p class="small">Uploaded: '+formatDate(p.createdAt)+'</p>';
+  loadReviews();
+})();
+
+function loadReviews(){
+  const pid = localStorage.getItem('viewProjectId');
+  const reviews = readFromLS('reviews') || [];
+  const list = document.getElementById('reviewsList');
+  list.innerHTML='';
+  const r = reviews.filter(function(x){ return String(x.projectId)===String(pid); }).sort(function(a,b){ return b.createdAt - a.createdAt; });
+  if(r.length===0) list.innerHTML='<div class="small">No reviews yet.</div>';
+  r.forEach(function(rv){
+    const el = document.createElement('div');
+    el.className='card';
+    el.innerHTML = '<div class="small">'+(rv.reviewer||rv.reviewerEmail||'Anonymous')+' • '+formatDate(rv.createdAt)+'</div><div>'+rv.text+'</div>';
+    list.appendChild(el);
+  });
+}
+
+document.getElementById('submitReview').addEventListener('click', function(){
+  const txt = document.getElementById('reviewText').value.trim();
+  const pid = localStorage.getItem('viewProjectId');
+  if(!txt){ document.getElementById('rmsg').textContent='Write a review first'; return; }
+  const reviews = readFromLS('reviews') || [];
+  const user = readFromLS('loggedUser') || {};
+  reviews.push({ id: Date.now(), projectId: pid, text: txt, reviewerEmail: user.email||null, reviewer: user.name||null, createdAt: Date.now() });
+  saveToLS('reviews', reviews);
+  document.getElementById('reviewText').value='';
+  document.getElementById('rmsg').textContent='Review submitted';
+  loadReviews();
+});
+</script></body></html>

@@ -1,65 +1,44 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Projects</title><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-gray-50"><header class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
-  <div class="container mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="rounded-full bg-white/20 w-10 h-10 flex items-center justify-center font-bold">Z</div>
-      <h1 class="text-xl font-semibold">ZackFinance</h1>
-    </div>
-    <nav class="space-x-4 text-sm">
-      <a href="index.html" class="hover:underline">Home</a>
-      <a href="projects.html" class="hover:underline">Projects</a>
-      <a href="upload.html" class="hover:underline">Upload</a>
-      <a href="dashboard.html" class="hover:underline">Dashboard</a>
-      <a href="about.html" class="hover:underline">About</a>
-      <a href="contact.html" class="hover:underline">Contact</a>
-    </nav>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Projects - ZackFinance</title>
+<link rel="stylesheet" href="style.css"></head><body>
+
+<div class="header">
+  <div class="brand">ZackFinance</div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <a href="upload.html">Upload</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
   </div>
-</header>
+</div>
 
-<main class="container mx-auto p-6">
-  <div id="grid" class="grid md:grid-cols-3 gap-4"></div>
+<main class="container">
+  <div class="card"><h2>Projects</h2><div id="grid" class="grid" style="margin-top:12px"></div></div>
 </main>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, where, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-  import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD7GJAwoB_mXTHeXpSP5n3OrUCe8v_3YlI",
-    authDomain: "zackfinance-hub.firebaseapp.com",
-    projectId: "zackfinance-hub",
-    storageBucket: "zackfinance-hub.firebasestorage.app",
-    messagingSenderId: "855025662852",
-    appId: "1:855025662852:web:a1951b145ba167eeecbbd1",
-    measurementId: "G-EXGXL15PYV"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
-
-  window.zf = { auth, db, storage, Chart, serverTimestamp, doc, deleteDoc, deleteObject };
-</script>
-
+<footer class="footer">Contact: 0767-76767 • zackfinancetz@gmail.com</footer>
+<script src="common.js"></script>
 <script>
-const { db } = window.zf;
-const grid = document.getElementById('grid');
-const q = query(collection(db,'projects'), orderBy('createdAt','desc'));
-onSnapshot(q, snap => {
-  grid.innerHTML='';
-  snap.forEach(d => {
-    const p = d.data();
+(function(){
+  const grid = document.getElementById('grid');
+  const projects = readFromLS('projects') || [];
+  if(projects.length===0){ grid.innerHTML='<div class="small">No projects yet.</div>'; return; }
+  projects.slice().reverse().forEach(function(p){
     const el = document.createElement('div');
-    el.className='bg-white p-4 rounded shadow';
-    let html = '<h4 class="font-semibold">'+ (p.title||'Untitled') +'</h4><p class="text-sm text-gray-600">'+ (p.desc||'') +'</p>';
-    if(p.fileUrl) html += '<img src="'+ p.fileUrl +'" class="mt-2 rounded max-h-40 object-cover">';
-    html += '<div class="text-xs mt-2 text-gray-500">'+ (p.ownerEmail||'') +'</div>';
-    el.innerHTML = html;
+    el.className='card';
+    var inner = '<h3>' + (p.title||'Untitled') + '</h3><p class="small">' + (p.desc||'').slice(0,180) + '</p>';
+    if(p.image) inner = '<h3>' + (p.title||'Untitled') + '</h3><img src="' + p.image + '" class="project-img">' + '<p class="small">' + (p.desc||'').slice(0,180) + '</p>';
+    inner += '<div style="margin-top:8px"><button class="btn" onclick="viewProject(' + p.id + ')">View</button></div>';
+    el.innerHTML = inner;
     grid.appendChild(el);
   });
-});
+})();
+function viewProject(id){
+  localStorage.setItem('viewProjectId', id);
+  location.href='project_view.html';
+}
 </script>
 </body></html>
